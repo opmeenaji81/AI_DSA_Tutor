@@ -91,13 +91,14 @@ const [loading, setLoading] = useState(false);
               {loading ? "Thinking..." : "✦ Get AI Hint"}
             </button>
 
-            <div className="hint-box">
-              <span>💡</span>
-              <p>
-                Your hint will appear here. Try explaining your approach
-                before asking for help.
-              </p>
+            {hint && (
+              <div className="hint-box">
+                <span>💡</span>
+                <p>
+                  {hint}
+                </p>
             </div>
+            )}
           </div>
         </section>
       </main>
