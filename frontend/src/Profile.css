@@ -110,3 +110,47 @@
     opacity: 0.35;
     cursor: not-allowed;
 }
+
+
+.profile-field {
+    margin-top: 28px;
+}
+
+.profile-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #8b5cf6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.profile-field input {
+    width: 100%;
+    padding: 15px 16px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: #080b14;
+    color: white;
+    outline: none;
+    font: inherit;
+}
+
+.profile-field input:focus {
+    border-color: #6366f1;
+}
+
+.profile-field input::placeholder {
+    color: #475569;
+}
+
+.profile-brand {
+    border: none;
+    background: none;
+    padding: 0;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 21px;
+    font-weight: 700;
+}

@@ -14,7 +14,7 @@ function Landing() {
 
         <button
             className="nav-btn"
-            onClick={() => (window.location.href = "/profile")}
+            onClick={() => (window.location.href = "/setup")}
 >
             Get Started →
 </button>
@@ -37,7 +37,7 @@ function Landing() {
 
         <button
             className="hero-btn"
-            onClick={() => (window.location.href = "/profile")}
+            onClick={() => (window.location.href = "/setup")}
             >
             Start Deriving →
 </button>

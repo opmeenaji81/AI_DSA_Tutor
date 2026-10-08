@@ -1,9 +1,11 @@
 import "./Home.css";
 
 function Home() {
-  const skillLevel = localStorage.getItem("deriva_skill_level");
-  if (!skillLevel) {
-    window.location.href = "/profile";
+  const profile = JSON.parse(
+    localStorage.getItem("deriva_profile") || "null"
+);
+  if (!profile) {
+    window.location.href = "/setup";
     return null;
 }
   return (
@@ -14,12 +16,13 @@ function Home() {
         <div className="home-nav-links">
           <a href="/home">Dashboard</a>
           <a href="/tutor">Tutor</a>
-          <a href="#about">About</a>
-        </div>
+          <a href="/profile">Profile</a>
+          <a href="/about">About Us</a>
+</div>
 
         <div className="profile-chip">
           <span>●</span>
-          {skillLevel}
+          {profile.skillLevel}
         </div>
       </nav>
 
@@ -54,7 +57,7 @@ function Home() {
 
           <div className="learning-row">
             <div>
-              <h2>{skillLevel}</h2>
+              <h2>{profile.skillLevel}</h2>
               <p>Current skill level</p>
             </div>
 

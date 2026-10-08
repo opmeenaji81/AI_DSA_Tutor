@@ -202,3 +202,31 @@
     flex-direction: column;
     gap: 14px;
 }
+
+.tutor-logo {
+    border: none;
+    background: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.tutor-nav {
+    display: flex;
+    gap: 20px;
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.tutor-nav button {
+    border: none;
+    background: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tutor-nav button:hover {
+    color: white;
+}

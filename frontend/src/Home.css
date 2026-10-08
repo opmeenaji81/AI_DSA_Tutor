@@ -7,28 +7,32 @@
 }
 
 .home-nav {
-    height: 72px;
-    padding: 0 6%;
+    min-height: 72px;
+    padding: 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .home-logo {
     font-size: 21px;
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .home-nav-links {
     display: flex;
-    gap: 30px;
+    gap: 26px;
+    align-items: center;
 }
 
 .home-nav-links a {
     color: #94a3b8;
     text-decoration: none;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .home-nav-links a:hover {
@@ -41,6 +45,8 @@
     border-radius: 20px;
     color: #cbd5e1;
     font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .profile-chip span {
@@ -49,13 +55,14 @@
 }
 
 .home-content {
-    width: min(1200px, 90%);
+    width: min(1100px, 90%);
     margin: auto;
-    padding: 70px 0;
+    padding: 55px 0;
 }
 
 .home-hero {
-    padding: 40px 0 70px;
+    padding: 35px 0 55px;
+    text-align: center;
 }
 
 .home-label,
@@ -68,7 +75,7 @@
 
 .home-hero h1 {
     margin: 18px 0;
-    font-size: clamp(55px, 8vw, 90px);
+    font-size: clamp(48px, 7vw, 82px);
     line-height: .92;
     letter-spacing: -4px;
 }
@@ -86,8 +93,8 @@
 }
 
 .start-solving-btn {
-    margin-top: 28px;
-    padding: 15px 25px;
+    margin-top: 25px;
+    padding: 14px 24px;
     border: none;
     border-radius: 11px;
     background: linear-gradient(90deg, #6366f1, #a855f7);
@@ -102,7 +109,7 @@
 }
 
 .dashboard-card {
-    padding: 28px;
+    padding: 26px;
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 20px;
     background: rgba(15, 23, 42, .65);
@@ -111,7 +118,7 @@
 .learning-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin-top: 25px;
+    margin-top: 22px;
 }
 
 .learning-row div {
@@ -134,7 +141,7 @@
 }
 
 .quick-section {
-    margin-top: 65px;
+    margin-top: 55px;
 }
 
 .domain-grid {
@@ -145,8 +152,8 @@
 }
 
 .domain-grid button {
-    min-height: 180px;
-    padding: 28px;
+    min-height: 160px;
+    padding: 26px;
     text-align: left;
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 18px;
@@ -163,7 +170,7 @@
 
 .domain-grid span {
     display: block;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
     color: #a78bfa;
     font-size: 25px;
 }
@@ -182,9 +189,77 @@
     color: #64748b;
 }
 
-@media (max-width: 700px) {
+/* Tablet / half-screen */
+@media (max-width: 900px) {
+    .home-nav {
+        padding: 0 3%;
+    }
+
     .home-nav-links {
-        display: none;
+        gap: 14px;
+    }
+
+    .home-nav-links a {
+        font-size: 12px;
+    }
+
+    .profile-chip {
+        font-size: 11px;
+        padding: 7px 9px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+    .home-nav {
+            min-height: 72px;
+            padding: 12px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            box-sizing: border-box;
+        }
+    
+        .home-logo {
+            font-size: 21px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+    
+        .home-nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+    
+        .home-nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+    
+        .home-nav-links a:hover {
+            color: white;
+        }
+    
+        .profile-chip {
+            padding: 8px 14px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 20px;
+            color: #cbd5e1;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+    .profile-chip {
+        margin-left: auto;
     }
 
     .learning-row,

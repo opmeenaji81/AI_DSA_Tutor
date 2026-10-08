@@ -57,9 +57,25 @@ function Tutor() {
   return (
     <div className="tutor-page">
       <header className="tutor-header">
-        <div className="tutor-logo">✦ Deriva</div>
-        <span>AI Problem-Solving Tutor</span>
-      </header>
+        <button
+            className="tutor-logo"
+            onClick={() => (window.location.href = "/home")}
+  >
+    ✦ Deriva
+  </button>
+
+  <nav className="tutor-nav">
+    <button onClick={() => (window.location.href = "/home")}>
+      Dashboard
+    </button>
+
+    <button onClick={() => (window.location.href = "/profile")}>
+      Profile
+    </button>
+  </nav>
+
+  <span>AI Problem-Solving Tutor</span>
+</header>
 
       <main className="tutor-workspace">
         <section className="problem-panel">
