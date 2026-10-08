@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.services.ai_tutor import generate_hint
+from app.services.ai_tutor import generate_tutor_response
 
 router = APIRouter()
 
@@ -9,6 +9,6 @@ def test_tutor():
     return {"message": "AI Tutor is ready"}
 
 
-@router.post("/hint")
-def get_hint(problem: str, user_answer: str):
-    return generate_hint(problem, user_answer)
+@router.post("/chat")
+def tutor_chat(problem: str, conversation: str):
+    return generate_tutor_response(problem, conversation)
