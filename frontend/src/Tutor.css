@@ -25,12 +25,14 @@
 
 .tutor-workspace {
     width: min(1400px, 92%);
-    min-height: calc(100vh - 70px);
+    height: calc(100vh - 70px);
     margin: auto;
     padding: 35px 0;
     display: grid;
     grid-template-columns: 1fr 1.15fr;
     gap: 25px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .problem-panel,
@@ -39,6 +41,9 @@
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 22px;
     background: rgba(15, 23, 42, .7);
+    min-height: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .panel-label {
@@ -183,6 +188,8 @@
 @media (max-width: 850px) {
     .tutor-workspace {
         grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: calc(100vh - 70px);
     }
 }
 

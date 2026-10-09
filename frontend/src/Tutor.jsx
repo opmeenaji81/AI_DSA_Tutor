@@ -2,9 +2,65 @@ import "./Tutor.css";
 import { useState } from "react";
 
 function Tutor() {
+
+    const profile = JSON.parse(
+      localStorage.getItem("deriva_profile") || "null"
+);
+
+    if (!profile) {
+      window.location.href = "/setup";
+      return null   ;
+
+
+}
+
+    const skillLevel = profile.skillLevel;
+
+
     const [problem, setProblem] = useState("");
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    
+const startTutorSession = async () => {
+  setLoading(true);
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/tutor/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          problem,
+          conversation: "No conversation yet. This is the start of a new tutoring session.",
+          skill_level: skillLevel,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    setMessages([
+      {
+        role: "ai",
+        text: data.response,
+      },
+    ]);
+  } catch (error) {
+    setMessages([
+      {
+        role: "ai",
+        text: "I'm temporarily unavailable. Please try again in a moment.",
+      },
+    ]);
+  } finally {
+    setLoading(false);
+  }
+};
+
     
 
     const sendToTutor = async (studentMessage) => {
@@ -22,14 +78,17 @@ function Tutor() {
     .join("\n");
 
   try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/tutor/chat?problem=${encodeURIComponent(
-        problem
-      )}&conversation=${encodeURIComponent(conversation)}`,
-      {
-        method: "POST",
-      }
-    );
+    const response = await fetch("http://127.0.0.1:8000/api/tutor/chat", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                problem,
+                                conversation,
+                                skill_level: skillLevel,
+                              }),
+});
 
     const data = await response.json();
 
@@ -96,19 +155,15 @@ function Tutor() {
           </div>
 
           <button
-            className="start-btn"
-            onClick={() => {
-              if (!problem.trim()) return;
-            
-              setMessages([
-                {
-                  role: "ai",
-                  text: "Let's start by understanding the problem. What do you think the question is asking you to find?",
-                },
-              ]);
-            }}
->
-  Start Deriving →
+              className="start-btn"
+              onClick={() => {
+                if (!problem.trim() || loading) return;
+              
+                setMessages([]);
+                startTutorSession();
+              }}
+>            
+              Start Deriving →
 </button>
         </section>
 
