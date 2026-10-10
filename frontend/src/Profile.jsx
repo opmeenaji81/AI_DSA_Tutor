@@ -41,7 +41,7 @@ function Profile({ setup = false }) {
 
         <button
           className="profile-brand"
-          onClick={() => (window.location.href = "/home")}
+          onClick={() => (window.location.href = "/")}
 >
   ✦ Deriva
 </button>
