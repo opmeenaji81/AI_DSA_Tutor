@@ -20,10 +20,24 @@ function Home() {
           <a href="/about">About Us</a>
 </div>
 
-        <div className="profile-chip">
-          <span>●</span>
-          {profile.skillLevel}
-        </div>
+        
+<div className="home-nav-actions">
+  <div className="profile-chip">
+    <span>●</span>
+    {profile.skillLevel}
+  </div>
+
+  <button
+    className="nav-btn"
+    onClick={() => {
+      localStorage.removeItem("deriva_profile");
+      window.location.href = "/";
+    }}
+  >
+    Log Out
+  </button>
+</div>
+
       </nav>
 
       <main className="home-content">
