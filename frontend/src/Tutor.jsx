@@ -1,5 +1,5 @@
 import "./Tutor.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function Tutor() {
 
@@ -20,6 +20,8 @@ function Tutor() {
     const [problem, setProblem] = useState("");
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const fileInputRef = useRef(null);
 
     
 const startTutorSession = async () => {
@@ -37,7 +39,17 @@ const startTutorSession = async () => {
           problem,
           conversation: "No conversation yet. This is the start of a new tutoring session.",
           skill_level: skillLevel,
-        }),
+          image: selectedImage
+            ? await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () =>
+                  resolve(reader.result.split(",")[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(selectedImage);
+              })
+            : null,
+          image_type: selectedImage?.type || null,
+}),
       }
     );
 
@@ -63,7 +75,7 @@ const startTutorSession = async () => {
 
     
 
-    const sendToTutor = async (studentMessage) => {
+  const sendToTutor = async (studentMessage) => {
   setLoading(true);
 
   const updatedMessages = [
@@ -134,6 +146,23 @@ const startTutorSession = async () => {
   </nav>
 
   <span>AI Problem-Solving Tutor</span>
+  
+<button
+  className="new-session-btn"
+  onClick={() => {
+    setProblem("");
+    setMessages([]);
+    setSelectedImage(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }}
+  disabled={loading}
+>
+  + New Session
+</button>
+
 </header>
 
       <main className="tutor-workspace">
@@ -147,21 +176,111 @@ const startTutorSession = async () => {
             value={problem}
             onChange={(e) => setProblem(e.target.value)}
             placeholder="Paste your DSA or SQL question here..."
+            onPaste={(e) => {
+              const items = e.clipboardData?.items;
+
+              if (!items) return;
+
+              for (const item of items) {
+                if (item.type.startsWith("image/")) {
+                  const file = item.getAsFile();
+                
+                  if (!file) continue;
+                
+                  if (file.size > 5 * 1024 * 1024) {
+                    alert("Image must be 5 MB or smaller.");
+                    return;
+                  }
+                
+                  if (!["image/png", "image/jpeg"].includes(file.type)) {
+                    alert("Please paste a PNG or JPG screenshot.");
+                    return;
+                  }
+                
+                  e.preventDefault();
+                  setSelectedImage(file);
+                  return;
+                }
+              }
+}}
 />
-          <div className="upload-box">
-            <span>⌁</span>
-            <p>Or upload a screenshot</p>
-            <small>PNG, JPG up to 5MB</small>
-          </div>
+          
+<div
+  className="upload-box"
+  onClick={() => fileInputRef.current?.click()}
+  role="button"
+  tabIndex={0}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      fileInputRef.current?.click();
+    }
+  }}
+>
+  <input
+    ref={fileInputRef}
+    type="file"
+    accept="image/png,image/jpeg,image/jpg"
+    hidden
+    onChange={(e) => {
+      const file = e.target.files?.[0];
+
+      if (!file) return;
+
+      if (!["image/png", "image/jpeg"].includes(file.type)) {
+        alert("Please select a PNG or JPG image.");
+        e.target.value = "";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image must be 5 MB or smaller.");
+        e.target.value = "";
+        return;
+      }
+
+      setSelectedImage(file);
+    }}
+  />
+
+  <span>⌁</span>
+  {selectedImage ? (
+  <div className="selected-image-preview">
+    <img
+      src={URL.createObjectURL(selectedImage)}
+      alt="Selected problem screenshot"
+    />
+    <p>{selectedImage.name}</p>
+    <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedImage(null);
+        
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        }}
+>
+  Remove image ✕
+</button>
+  </div>
+) : (
+  <p>Or upload a screenshot</p>
+)}
+  <small>PNG, JPG up to 5MB</small>
+</div>
+
 
           <button
               className="start-btn"
-              onClick={() => {
-                if (!problem.trim() || loading) return;
               
-                setMessages([]);
-                startTutorSession();
-              }}
+                onClick={() => {
+                  if ((!problem.trim() && !selectedImage) || loading) return;
+                
+                  setMessages([]);
+                  startTutorSession();
+                }}
+
 >            
               Start Deriving →
 </button>

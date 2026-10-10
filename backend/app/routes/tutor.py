@@ -7,9 +7,11 @@ router = APIRouter()
 
 
 class TutorChatRequest(BaseModel):
-    problem: str
-    conversation: str
+    problem: str = ""
+    conversation: str = ""
     skill_level: str
+    image: str | None = None
+    image_type: str | None = None
 
 
 @router.get("/test")
@@ -23,5 +25,7 @@ def tutor_chat(request: TutorChatRequest):
     return generate_tutor_response(
         request.problem,
         request.conversation,
-        request.skill_level
-    )
+        request.skill_level,
+        request.image,
+        request.image_type
+)

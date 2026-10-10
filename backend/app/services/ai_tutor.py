@@ -1,3 +1,4 @@
+from email.mime import image
 import time
 import os
 from dotenv import load_dotenv
@@ -12,9 +13,10 @@ client = genai.Client(api_key=api_key)
 def generate_tutor_response(
     problem: str,
     conversation: str,
-    skill_level: str
+    skill_level: str,
+    image: str | None = None,
+    image_type: str | None = None,
 ):
-    
     prompt = f"""
 You are Deriva, an AI problem-solving tutor.
 
@@ -86,9 +88,24 @@ Your job is to make the student think, not to make the problem disappear.
 
     for attempt in range(3):
         try:
+            contents = [prompt]
+
+            if image:
+                import base64
+                from google.genai import types
+            
+                image_bytes = base64.b64decode(image)
+            
+                contents.append(
+                    types.Part.from_bytes(
+                        data=image_bytes,
+                        mime_type=image_type or "image/png",
+                    )
+                )
+            
             response = client.models.generate_content(
                 model="gemini-3.5-flash",
-                contents=prompt
+                contents=contents,
             )
     
             return {"response": response.text}
