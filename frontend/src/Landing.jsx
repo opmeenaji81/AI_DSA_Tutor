@@ -9,7 +9,7 @@ function Landing() {
         <div className="landing-links">
           <a href="#how">How it works</a>
           <a href="#features">Features</a>
-          <a href="#about">About Us</a>
+          <a href="/about">About Us</a>
         </div>
 
         <button
