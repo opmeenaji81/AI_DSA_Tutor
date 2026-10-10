@@ -1,24 +1,76 @@
 import "./Tutor.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useLocation, Navigate } from "react-router-dom";
 
 function Tutor() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const selectedId = location.state?.sessionId;
+
+    if (!selectedId) return;
+
+    const sessions = JSON.parse(
+      localStorage.getItem("deriva_sessions") || "[]"
+    );
+
+    const session = sessions.find(
+      (item) => item.id === selectedId
+    );
+
+    if (session) {
+      setSessionId(session.id);
+      setProblem(session.problem);
+      setMessages(session.messages);
+      setSelectedImage(null);
+    }
+
+  // Clear navigation state after restoring the session.
+  window.history.replaceState({}, document.title);
+}, [location.state]);
 
     const profile = JSON.parse(
       localStorage.getItem("deriva_profile") || "null"
 );
 
-    if (!profile) {
-      window.location.href = "/setup";
-      return null   ;
 
-
-}
 
     const skillLevel = profile.skillLevel;
 
 
     const [problem, setProblem] = useState("");
     const [messages, setMessages] = useState([]);
+
+
+    const [sessionId, setSessionId] = useState(null);
+    const saveSession = (id, sessionProblem, sessionMessages) => {
+      const sessions = JSON.parse(
+        localStorage.getItem("deriva_sessions") || "[]"
+      );
+    
+      const existingIndex = sessions.findIndex(
+        (session) => session.id === id
+      );
+    
+      const updatedSession = {
+        id,
+        problem: sessionProblem,
+        messages: sessionMessages,
+        updatedAt: new Date().toISOString(),
+      };
+    
+      if (existingIndex >= 0) {
+        sessions[existingIndex] = updatedSession;
+      } else {
+        sessions.unshift(updatedSession);
+      }
+    
+      localStorage.setItem("deriva_sessions", JSON.stringify(sessions));
+};
+
+
+
+
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const fileInputRef = useRef(null);
@@ -55,12 +107,24 @@ const startTutorSession = async () => {
 
     const data = await response.json();
 
-    setMessages([
-      {
-        role: "ai",
-        text: data.response,
-      },
-    ]);
+if (!response.ok) {
+  throw new Error(
+    data.detail || data.response || "Unable to start the session. Please try again."
+  );
+}
+
+    const initialMessages = [
+    {
+      role: "ai",
+      text: data.response,
+    },
+];
+
+    const id = crypto.randomUUID();
+
+    setSessionId(id);
+    setMessages(initialMessages);
+    saveSession(id, problem, initialMessages);
   } catch (error) {
     setMessages([
       {
@@ -104,25 +168,50 @@ const startTutorSession = async () => {
 
     const data = await response.json();
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "ai", text: data.response },
-    ]);
+    if (!response.ok) {
+      throw new Error(
+        data.detail || data.response || "Something went wrong. Please try again."
+      );
+}
+
+    setMessages((prev) => {
+      const updatedMessages = [
+        ...prev,
+        { role: "ai", text: data.response },
+      ];
+    
+      const id = sessionId || crypto.randomUUID();
+      setSessionId(id);
+      saveSession(id, problem, updatedMessages);
+    
+      return updatedMessages;
+});
   } catch (error) {
   console.error("Tutor error:", error);
 
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "ai",
-      text: `Connection error: ${error.message}`,
-    },
-  ]);
+  setMessages((prev) => {
+    const updatedMessages = [
+      ...prev,
+      {
+        role: "ai",
+        text: `Connection error: ${error.message}`,
+      },
+    ];
+
+    if (sessionId) {
+      saveSession(sessionId, problem, updatedMessages);
+    }
+
+    return updatedMessages;
+  });
 } finally {
     setLoading(false);
   }
 };
 
+  if (!profile) {
+  return <Navigate to="/setup" replace />;
+}
 
 
   return (
@@ -153,6 +242,7 @@ const startTutorSession = async () => {
     setProblem("");
     setMessages([]);
     setSelectedImage(null);
+    setSessionId(null);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -161,6 +251,15 @@ const startTutorSession = async () => {
   disabled={loading}
 >
   + New Session
+</button>
+
+<button
+  className="new-session-btn"
+  onClick={() => {
+    window.location.href = "/history";
+  }}
+>
+  Conversation History
 </button>
 
 </header>

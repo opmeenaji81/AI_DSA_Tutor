@@ -6,6 +6,7 @@ import Profile from "./Profile";
 import Home from "./Home";
 import EditProfile from "./EditProfile";
 import About from "./About";
+import History from "./History";
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/tutor" element={<Tutor />} />
           <Route path="/edit-profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
+          <Route path="/history" element={<History />} />
 </Routes>
     </BrowserRouter>
   );
